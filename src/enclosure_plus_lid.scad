@@ -1,98 +1,108 @@
 // copyright Free Beachler, Longevity Software d.b.a. Terawatt Industries, 2013
 // all rights reserved
 
-box_with_inset_lid(3, 4, 21, 80 + 35 + 5, 56 + 5, true);
+width = 37.465 + 4;
+length = 58.42 + 4;
+height = 29;
+wall_thickness = 2.5;
+mnt_dia = 4.2;
+roundness = 2;
 
-module box_with_inset_lid(bt, wt, h, w, l, hand) {
-	difference() {
-		box(bt, wt, h, w, l, hand);
-		translate([-w / 2, 0, wt + 5 + 2]) usb_port_a();
-		translate([w / 2 - 12 / 2 - wt - 3 / 2 - 19 / 4 + 0.5, l / 2, wt + 5 + 3]) rotate([0, 0, 90]) usb_twoport();
-		// power port
-		translate([-w / 2, l / 2 - wt - 8, 12 + 0.5]) rotate([0, 90, 0]) cylinder(r = 4, h = 10, center = true, $fn = 100);
-		// holes for vinc 2
-		translate([l / 2 - 5 / 2 + 18 / 2 + 23 / 2, -16 - wt / 2, -0.1]) cube([5, 46, 10]);
-		translate([l / 2 - 5 / 2 + 18 / 2 - 3 / 2, -16 - wt / 2, -0.1]) cube([5, 46, 10]);
-		// mount hole
-		translate([l - 20, -24, 0]) cylinder(r = 1.8, h = 10, center = true, $fn = 100);
+p3r_enclosure();
+% translate([wall_thickness, wall_thickness, wall_thickness]) p3r_board_dim();
+
+module p3r_enclosure(w = width, l = length, h = height, wt = wall_thickness, hand = 0, rund = roundness) {
+	assign(twt = wt - rund) {
+		p3r_enclosure_base(w, l, h / 2, wt, hand, rund);
+		translate([w * 2 + 20, 0, 0])
+				p3r_enclosure_lid(w, l, h / 3, wt, hand);
 	}
-	// wall 1
-	translate([-w / 2 + wt / 2 + 65, -l / 2 + wt + 3, 1]) cube([3, 5, 10]);
-	translate([-w / 2 + wt / 2 + 68, -5 / 2, 1]) cube([3, 5, 10]);
-	inset_lid(wt, h, w, l);
-	translate([w / 2 , l / 2 + 0.01, wt + 1]) vinc2();
-		// mount plate
-		difference() {
-			translate([l - 2, -28, 0]) cube([10, 13, wt]);
-			translate([l + 3, -24, 0]) cylinder(r = 1.8, h = 10, center = true, $fn = 100);
-		}
 }
 
-module box(bt, wt, h, w, l) {
+module p3r_enclosure_base(w = width, l = length, h = height, wt = wall_thickness, hand = 0, rund = roundness) {
 	difference() {
-		hull() {
+		translate([rund / 2, rund / 2, 0])
+		minkowski() {
+			cube([w + wt * 2 - rund, l + wt * 2 - rund, h + wt]);
+			cylinder(r = rund / 2, h = 0.01, center = false, $fn = 50);
+		}
+		translate([wt, wt, wt]) 
+			cube([w, l, h + wt]);
+		// lid cavity
+		translate([wt * 3/8, wt * 3/8, h * 2/3 - 1]) 
+			cube([w + wt * 5/4, l + wt * 5/4, h + wt]);
+		// usb ports
+		translate([wt + w / 2 - 16.5 / 2, -wt / 2, wt + 1])
+			usb_port_a();
+		translate([wt + w / 2 - 16.5 / 2, l + wt / 2, wt + 1])
+			usb_port_a();
+		// power in port
+		translate([w - wt, l + wt - 3.175 - 10 - 3, wt + 1])
+			cube([10, 10, h * 2]);
+		// power out port
+		translate([0 - 1, wt + 15.24 + 3, wt + 1])
+			cube([10, 10, h * 2]);
+	}
+	// mount tab
+	translate([w + wt - 20 / 2 - 1, l + wt - 1, 0]) {
+	difference() {
+		union() {
+			translate([-10, 0, 0])
+				cube([20, 10, wt]);
+			translate([0, 10, 0])
+				cylinder(r = 10, h = wt, center = false, $fn = 50);
+		}
+		translate([0, 10, -0.1])
+			cylinder(r = mnt_dia / 2, h = h, center = false, $fn = 50);
+	}
+	}
+}
+
+module p3r_enclosure_lid(w = width, l = length, h = height, wt = wall_thickness, hand = 0, rund = roundness) {
+	mirror([-1, 0, 0]) {
+	difference() {
+		translate([rund / 2, rund / 2, 0])
+		minkowski() {
+			cube([w + wt * 2 - rund, l + wt * 2 - rund, h + wt]);
+			cylinder(r = rund / 2, h = 0.01, center = false, $fn = 50);
+		}
+		translate([wt, wt, wt]) 
+			cube([w, l, h + wt]);
+		// lid lip
+		difference() {
+			translate([-wt, -wt, wt]) 
+				cube([w + wt * 4, l + wt * 4, h + wt]);
+			// subtract lid cavity
+			translate([wt - wt * 3/8, wt - wt * 3/8, wt]) 
+				cube([w + wt * 3/4, l + wt * 3/4, h + wt]);
+		}
+		// usb ports
+		translate([wt + w / 2 - 16.5 / 2, -wt / 2, h - wt])
+			usb_port_a();
+		translate([wt + w / 2 - 16.5 / 2, l + wt / 2, h - wt])
+			usb_port_a();
+		// power in port
+		translate([w - wt, l + wt - 3.175 - 10 - 3, wt + 1])
+			cube([10, 10, h * 2]);
+		// power out port
+		translate([0 - 1, wt + 15.24 + 3, wt + 1])
+			cube([10, 10, h * 2]);
+		// led port
+		translate([w - wt - 2 + rund, 5, -1])
 			minkowski() {
-				translate([-w / 2 + 1, -l / 2 + 1, 0]) cube([w - 1 * 2, l - 1 * 2, bt]);
-				cylinder(r = 1, h = 0.01, center = false, $fn = 100);
+				cube([3 - rund, 15 - rund, 20]);
+				cylinder(r = rund / 2, h = 0.01, center = false, $fn = 50);
 			}
-			translate([-w / 2, -l / 2, bt]) cube([w, l, h]);
-		}
-		// rounded corners inside
-		minkowski() {
-			translate([-w / 2 + wt / 2 + 1, -l / 2 + wt / 2 + 1, bt]) cube([w - wt - 1 * 2, l - wt - 1 * 2, h + bt + wt]);
-			cylinder(r = 1, h = 0.01, center = false);
-		}
+//			scale([0.25, 0.25, 10])
+//				import("tw_logo_0.1_3D.stl", convexity=50);
+	}
 	}
 }
 
-module inset_lid(wt, h, w, l) {
-	translate([-w / 2 + 1, l / 2 + 5, 0]) {
-		minkowski() {
-			union() {
-				cube([w - 1 * 2 - 0.1, l - 1 * 2 - 0.1, 2]);
-				translate([wt / 2 + 1 / 2, wt / 2 + 0.5 / 2, 1]) cube([w - wt - 1 * 2 - 1, l - wt - 1 * 2 - 1, 2]);
-			}
-			cylinder(r = 1, h = 0.01, center = false);
-		}
-	}
+module usb_port_a(wt = wall_thickness * 2) {
+	cube([16.5, wt, 50 + 3]);
 }
 
-module usb_port_a() {
-	translate([-20 / 2, -15 / 2, -8 / 2]) rotate([0, 0, 0]) cube([20, 15, 5 + 3]);
-}
-
-module usb_port_b() {
-	translate([-20 / 2, -12 / 2, -12 / 2]) rotate([0, 0, 0]) cube([20, 12, 13]);
-}
-
-module usb_twoport() {
-	translate([-20 / 2, -15 / 2, -14 / 2]) rotate([0, 0, 0]) cube([20, 15, 18]);
-}
-
-module translator() {
-	translate([-11 - 3 / 2, -19 - 3 / 2, -5 / 2]) {
-		difference() {
-			cube([11 + 3, 19 + 3, 5]);
-			translate([3 / 2, 3 / 2, 0]) cube([11, 19, 5 + 0.1]);
-		}
-	}
-}
-
-module cp2102() {
-	translate([-25 - 3 / 2, -35 - 3 / 2, -5 / 2]) {
-		difference() {
-			cube([25 + 3, 35, 5]);
-			translate([3 / 2, 3 / 2, 0]) cube([25, 35, 5 + 0.1]);
-		}
-	}
-}
-
-module vinc2() {
-	translate([-25, -49 - 3 / 2 - 0.1, -5 / 2]) {
-% translate([0.5, 0, 0]) cube([18, 48, 2]);
-		difference() {
-			translate([-3, 0, 0]) cube([19 + 3 * 2, 49, 5]);
-			translate([0, 3 / 2, 0]) cube([19, 49, 5 + 0.1]);
-		}
-	}
+module p3r_board_dim(w = width, l = length) {
+	% cube([w, l, 3]);
 }
