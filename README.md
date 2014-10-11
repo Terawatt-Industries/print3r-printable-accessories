@@ -1,8 +1,11 @@
 Printr Printable Accessories
 ============================
-Printable accessories for Print3r for Android include holders to attach Android devices to a 3D printer, an enclosure for the Print3r for Android Adapter Board, and a model of the Print3r Adapter Board PCB.
+Printable accessories for Print3r for Android include holders to attach Android devices to a 3D printer, an enclosure for the Print3r for Android Adapter Board, and a model of the Print3r Adapter Board PCB.  All models are in OpenSCAD.
 
-All models are in OpenSCAD.  All files are licensed under Apache 2.0.
+License
+-------
+(Almost) All files are licensed under Apache 2.0, _except_ PCB Adapter Board model conveyed by the file named "src/adapter_board_3d_pcb.scad".  The following license applies to "src/adapter_board_3d_pcb.scad":
+The SCAD file "adapter_board_3d_pcb.scad" is copyright 2014 Longevity Software LLC, Free Beachler, all rights reserved.  This file is included here (Printr Printable Accessories) for modeling purposes only.  This file can only be distributed with this repository, but not individually or separately.  Anytime this file is distributed it must include this license agreement, including this README file, and all related files in this codebase (the 'Printr Printable Accessories' repository).  You are not free to distribute modified copies of this file, whether modified in name and/or content, without express written permission by Free Beachler, Longevity Software LLC.  Commercial usage beyond that conveyed in this codebase, which means to model an enclosure for the Print3r for Android Adapter Board, is prohibited without express written permission by Free Beachler, Longevity Software LLC.
 
 Parametric Nut Clamps
 --------
