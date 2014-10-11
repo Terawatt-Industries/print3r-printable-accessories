@@ -8,6 +8,8 @@ Parametric Nut Clamps
 --------
 These parts depend on another open source part, the Parametric Nut Clamp for 20mm Extrusion.  This project is linked as a Git submodule.
 
+NOTE:  Git submodules do not behave like standard folders in a Git project.  Run the command "git submodule update --init" the first time you clone this repository so that Git will download the source and STL files for the nut clamps.
+
 Printing
 --------
 STL files are in /dist.  Print these in PLA or whatever material you prefer for both Print3r Adapter Board enclosure and Android device holder(s).  The enclosure is a relatively straightforward print except that it exhibits tall, thin walls, which can challenge some machines.  The device holders are long, narrow, and tall, so if using ABS consider using a brim and/or raft to reduce warping effects.  Print at whatever layer height you prefer, such as 0.25mm.
