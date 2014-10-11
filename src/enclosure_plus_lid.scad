@@ -1,6 +1,8 @@
 // copyright Free Beachler, Longevity Software d.b.a. Terawatt Industries, 2013
 // all rights reserved
 
+use <adapter_board_3d_pcb.scad>
+
 width = 37.465 + 4;
 length = 58.42 + 4;
 height = 29;
@@ -9,7 +11,7 @@ mnt_dia = 4.2;
 roundness = 2;
 
 p3r_enclosure();
-% translate([wall_thickness, wall_thickness, wall_thickness]) p3r_board_dim();
+% translate([wall_thickness + 4 / 2, wall_thickness + 4 / 2, wall_thickness]) p3r_pcb();
 
 module p3r_enclosure(w = width, l = length, h = height, wt = wall_thickness, hand = 0, rund = roundness) {
 	assign(twt = wt - rund) {
